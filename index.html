@@ -1,0 +1,39 @@
+<html>
+<head>
+</head>
+<body>
+	<h2><p id="mouse_pos">Mouse position: 0,0</p></h2>
+	<canvas id="mycanvas" width="800" height="800" style="border:1px solid #000000;"></canvas>
+	
+	<script src="js/kohonen.js"></script>
+	<script>
+		var my_map = init_feature_map();
+		var trained = [];
+		draw_map(my_map, document.getElementById("mycanvas"), trained);
+		
+		function getMousePos(canvas, evt) {
+			var rect = canvas.getBoundingClientRect();
+			return {
+				x: evt.clientX - rect.left,
+				y: evt.clientY - rect.top
+			};
+		}
+		var canvas = document.getElementById('mycanvas');
+		canvas.addEventListener('mousemove', function(evt) {
+			var mousePos = getMousePos(canvas, evt);
+			var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+			document.getElementById("mouse_pos").innerHTML = message;
+		}, false);
+		canvas.addEventListener('click', function(evt){
+			var rect = canvas.getBoundingClientRect();
+			var x = evt.clientX - rect.left;
+			var y = evt.clientY - rect.top;
+			var this_input = [x,y];
+			my_map = update_map(my_map, this_input); //update
+			
+			trained.push(this_input.concat());
+			draw_map(my_map, document.getElementById("mycanvas"), trained);
+		}, false);
+    </script>
+</body>
+</html>
